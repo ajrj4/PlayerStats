@@ -27,22 +27,22 @@ public class UsuarioDAO {
 		return connection;
 	}
 
-	public void insertUsuario(Usuario usuario) {
+	public void insertUsuario(Usuario usuario){
 		Connection connection = getConnection();
 		String sql = "insert into usuarios (nome, email, senha, summonerId) values (?, ?, ?, ?)";
-
-		try {
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.setString(1, usuario.getNome());
-			ps.setString(2, usuario.getEmail());
-			ps.setString(3, usuario.getSenha());
-			ps.setString(4, usuario.getSummonerId());
-
-			ps.executeUpdate();
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
+			try {
+				PreparedStatement ps = connection.prepareStatement(sql);
+				ps.setString(1, usuario.getNome());
+				ps.setString(2, usuario.getEmail());
+				ps.setString(3, usuario.getSenha());
+				ps.setString(4, usuario.getSummonerId());
+				
+				ps.executeUpdate();
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}		
 	}
 
 	public Usuario selectUsuarioByName(String name) {
@@ -95,7 +95,7 @@ public class UsuarioDAO {
 
 	public int deleteUsuario(int id) {
 		Connection connection = getConnection();
-		String sql = "delete from usuarios where id=?";
+		String sql = "delete from usuarios where idUsuario=?";
 		int status = 0;
 
 		try {

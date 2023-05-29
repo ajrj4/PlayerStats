@@ -6,7 +6,6 @@
 <%@page import="com.google.gson.Gson"%>
 <%@page import="com.google.gson.JsonObject"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Collections"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -18,11 +17,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/partida.css">
+<link rel="stylesheet" href="css/partida.css">
 </head>
 <body>
 	<%
-		//Caso acesso direto por link, pois não teriam dados suficientes para mostrar
 		if(request.getAttribute("pagina") == null){
 			response.sendRedirect("select-partidas");
 			return;
@@ -37,11 +35,13 @@
 		ChampionDAO championDAO = new ChampionDAO();
 		
 		JsonObject jsonObject = new Gson().fromJson(partidaJson, JsonObject.class);
-		Instant instant = Instant.ofEpochMilli(jsonObject.getAsJsonObject("info").get("gameCreation")
+		Instant dateUnix = Instant.ofEpochMilli(jsonObject.getAsJsonObject("info").get("gameCreation")
 				.getAsLong());
-		Date data = Date.from(instant);
+		Date data = Date.from(dateUnix);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String dataPartida = dateFormat.format(data);
+		
+		String modoDeJogo = jsonObject.getAsJsonObject("info").get("gameMode").getAsString();
 		
 		JsonArray participantes = jsonObject.getAsJsonObject("info").getAsJsonArray("participants");
 		JsonObject time1 = (JsonObject)jsonObject.getAsJsonObject("info").getAsJsonArray("teams").get(0);
@@ -60,6 +60,7 @@
 		String deaths;
 		String assists;
 	%>
+	
 	<header>
 		<nav>
 			<a href="main">Home</a>
@@ -74,6 +75,7 @@
 		<div class="container">
 			<div class="teamStats">
 				<div class="fonteBold">
+			    	<h2><%=modoDeJogo %></h2>
 			    	<h2><%=dataPartida %></h2>
 					<p>Blue Team</p>
 					
@@ -85,19 +87,20 @@
 					
 				</div>
 				
-				<div class="horizontalAlign">
-				
-				<%for(int i = 0; i < (playersPorPartida / 2); i++){ 
-					player = (JsonObject)participantes.get(i);
-					championIcon = championDAO.selectChampionById(Integer.parseInt(player.get("championId").toString())).getChampionIcon();
-					summonerName = player.get("summonerName").toString().replaceAll("\"", "");
-					championName = player.get("championName").toString().replaceAll("\"", "");
-					kills = player.get("kills").toString();
-					deaths = player.get("deaths").toString();
-					assists = player.get("assists").toString();
-				%>
-				
-				<div class="player">
+				<div class="horizontalAlign">		
+					<%
+						for(int i = 0; i < (playersPorPartida / 2); i++){ 
+							player = (JsonObject)participantes.get(i);
+							championIcon = championDAO.selectChampionById(Integer.parseInt(player.get("championId").toString()))
+									.getChampionIcon();
+							summonerName = player.get("summonerName").toString().replaceAll("\"", "");
+							championName = player.get("championName").toString().replaceAll("\"", "");
+							kills = player.get("kills").toString();
+							deaths = player.get("deaths").toString();
+							assists = player.get("assists").toString();
+					%>
+					
+					<div class="player">
 						<div class="fonteBold">
 							<p> <%=summonerName %></p>
 							<img class="championIcon" src="data:image/jpg;base64, <%=championIcon %>" />
@@ -108,50 +111,52 @@
 							<p>Deaths: <%=deaths %></p>
 							<p>Assists: <%=assists %></p>
 						</div>
-				</div>
-			<%
-			}
-			%>
+					</div>
+					<%
+						}
+					%>
 				</div>
 			</div>
 			<hr class="barraDivisoria">
 			<div class="teamStats">			
 				<div class="fonteBold">
 					<p>Red Team</p>
+					
 					<%if(vitoriaTime2){ %>
 						<p>Vitória</p>
 					<%} else{%>
 						<p>Derrota</p>
 					<%} %>
+					
 				</div>
 				<div class="horizontalAlign">
-				
-				<%
-				for(int i = (playersPorPartida / 2); i < playersPorPartida; i++){
-					player = (JsonObject)participantes.get(i);
-					championIcon = championDAO.selectChampionById(Integer.parseInt(player.get("championId").toString())).getChampionIcon();
-					summonerName = player.get("summonerName").toString().replaceAll("\"", "");
-					championName = player.get("championName").toString().replaceAll("\"", "");
-					kills = player.get("kills").toString();
-					deaths = player.get("deaths").toString();
-					assists = player.get("assists").toString();
-				%>
-				
-				<div class="player">
-					<div class="fonteBold">
-						<p> <%=summonerName %></p>
-						<img class="championIcon" src="data:image/jpg;base64, <%=championIcon %>" alt ="<%=championName%>"/>
-						<p><%=championName %></p>
+					<%
+						for(int i = (playersPorPartida / 2); i < playersPorPartida; i++){
+							player = (JsonObject)participantes.get(i);
+							championIcon = championDAO.selectChampionById(Integer.parseInt(player.get("championId").toString()))
+									.getChampionIcon();
+							summonerName = player.get("summonerName").toString().replaceAll("\"", "");
+							championName = player.get("championName").toString().replaceAll("\"", "");
+							kills = player.get("kills").toString();
+							deaths = player.get("deaths").toString();
+							assists = player.get("assists").toString();
+					%>
+					
+					<div class="player">
+						<div class="fonteBold">
+							<p> <%=summonerName %></p>
+							<img class="championIcon" src="data:image/jpg;base64, <%=championIcon %>" alt ="<%=championName%>"/>
+							<p><%=championName %></p>
+						</div>
+						<div class="playerStats">
+							<p>Kills: <%=kills %></p>
+							<p>Deaths: <%=deaths %></p>
+							<p>Assists: <%=assists %></p>
+						</div>
 					</div>
-					<div class="playerStats">
-						<p>Kills: <%=kills %></p>
-						<p>Deaths: <%=deaths %></p>
-						<p>Assists: <%=assists %></p>
-					</div>
-				</div>
-			<%
-			}
-			%>
+					<%
+						}
+					%>
 				</div>
 			</div>
 		</div>
@@ -165,7 +170,7 @@
 		<% 
 			}
 		%>
-		<a href="update-partida?puuid=<%=puuid%>">Atualizar Partidas</a>
+		<a href="update-partidas?puuid=<%=puuid%>">Atualizar Partidas</a>
 		<%
 		  if(pagina < maxPaginas - 1){		  
 		%>

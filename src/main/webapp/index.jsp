@@ -18,9 +18,11 @@
 		Summoner summoner = summonerDAO.selectSummonerById(usuario.getSummonerId());
 	%>
 	<header>
+		<a href="select-champions">Atualizar dados</a>
 		<a href="select-champions">Campeões</a>
-		<a href="championForm.jsp">Cadastrar Campeões</a>
+		<a href="cadastrarChampion.jsp">Cadastrar Campeões</a>
 		<a href="select-partidas">Partidas</a>
+		<a href="delete-usuario">Excluir conta</a>
 		<a href="logout">Sair</a>
 	</header>
 	<h1><%=summoner.getSummonerName() %></h1>

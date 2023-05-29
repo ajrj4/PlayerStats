@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Arrays;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.RequestDispatcher;
@@ -13,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -20,12 +22,13 @@ import com.google.gson.JsonPrimitive;
 
 import bean.Summoner;
 import model.SummonerDAO;
+import model.UsuarioDAO;
 
-@WebServlet(urlPatterns = { "/insert-summoner", "/update-partidas" })
+@WebServlet(urlPatterns = { "/insert-summoner", "/delete-summoner", "/update-summoner"})
 public class SummonerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	String apiKey = "?api_key=RGAPI-667506a1-aa30-4c39-b582-9866b83be204";
+	String apiKey = "?api_key=RGAPI-57aacb97-2649-4106-ad1d-26c4f4d34270";
 	
 	Summoner summoner = new Summoner();
 	SummonerDAO dao = new SummonerDAO();
@@ -47,9 +50,13 @@ public class SummonerController extends HttpServlet {
 		case "/insert-summoner":
 			inserirSummoner(request, response);
 			break;
-
-		case "/update-partidas":
-			atualizarSummonerPartidas(request, response);
+			
+		case "/delete-summoner":
+			deletarSummoner(request, response);
+			break;
+			
+		case "/update-summoner":
+			atualizarSummoner(request, response);
 			break;
 
 		default:
@@ -58,7 +65,115 @@ public class SummonerController extends HttpServlet {
 	}
 
 	protected void inserirSummoner(HttpServletRequest request, HttpServletResponse response) {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
 		
+		if(usuarioDAO.selectUsuarioByName(request.getParameter("nome")).getNome() != null) {
+			try {
+				response.getWriter().println("<script type='text/javascript'>");
+				response.getWriter().println("alert('Usuário já cadastrado!');");
+				response.getWriter().println("window.location.replace('cadastrarUsuario.jsp');");
+				response.getWriter().println("</script>");
+				return;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		String respostaDeApi = buscarDadosDeSummoner(request);		
+		
+		JsonObject summonerResponse = new Gson().fromJson(respostaDeApi, JsonObject.class);	
+		JsonPrimitive summonerNameResponse = summonerResponse.getAsJsonPrimitive("name");
+		
+		if (summonerNameResponse == null) {
+			try {
+				response.getWriter().println("<script type='text/javascript'>");
+				response.getWriter().println("alert('Invocador nao encontrado');");
+				response.getWriter().println("window.location.replace('cadastrarUsuario.jsp');");
+				response.getWriter().println("</script>");
+				return;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		String puuid = summonerResponse.getAsJsonPrimitive("puuid").getAsString();
+		String encryptedId = summonerResponse.getAsJsonPrimitive("id").getAsString();
+		String summonerLevel = summonerResponse.getAsJsonPrimitive("summonerLevel").getAsString();
+		
+		summoner.setSummonerPuuid(puuid);
+		summoner.setSummonerEncryptedId(encryptedId);
+		summoner.setSummonerName(summonerNameResponse.getAsString());
+		summoner.setSummonerLevel(summonerLevel);
+			
+		try {
+			dao.insertSummoner(summoner);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			try {
+				response.getWriter().println("<script type='text/javascript'>");
+				response.getWriter().println("alert('Invocador já cadastrado!');");
+				response.getWriter().println("window.location.replace('cadastrarUsuario.jsp');");
+				response.getWriter().println("</script>");
+				return;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		request.setAttribute("puuid", summoner.getSummonerPuuid());
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("insert-usuario");
+		
+		try {
+			dispatcher.forward(request, response);
+		} catch (ServletException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//TODO
+	protected void deletarSummoner(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+		String puuid = (String) session.getAttribute("puuid");
+		
+		dao.deleteSummoner(puuid);
+		
+		try {
+			response.getWriter().println("<script type='text/javascript'>");
+			response.getWriter().println("alert('Conta excluída com sucesso!');");
+			response.getWriter().println("window.location.replace('logout');");
+			response.getWriter().println("</script>");
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected void atualizarSummoner(HttpServletRequest request, HttpServletResponse response) {
+		String respostaDeApi = buscarDadosDeSummoner(request);
+		
+		JsonObject json = new Gson().fromJson(respostaDeApi, JsonObject.class);
+		
+		String puuid = json.get("puuid").getAsString();
+		String encryptedId = json.get("id").getAsString();
+		String summonerName = json.get("name").getAsString();
+		String summonerLevel = json.get("summonerLevel").getAsString();
+		
+		summoner.setSummonerPuuid(puuid);
+		summoner.setSummonerEncryptedId(encryptedId);
+		summoner.setSummonerName(summonerName);
+		summoner.setSummonerLevel(summonerLevel);
+		
+		dao.updateSummoner(summoner);
+		
+		try {
+			response.sendRedirect("update-partida");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	protected String buscarDadosDeSummoner(HttpServletRequest request) {
 		
 		HttpsURLConnection connection = null;
 		BufferedReader reader;
@@ -98,59 +213,7 @@ public class SummonerController extends HttpServlet {
 			connection.disconnect();
 		}
 		
-		JsonObject summonerResponse = new Gson().fromJson(responseContent.toString(), JsonObject.class);
-		
-		JsonPrimitive summonerNameResponse = summonerResponse.getAsJsonPrimitive("name");
-		
-		if (summonerNameResponse == null) {
-			try {
-				response.getWriter().println("<script type='text/javascript'>");
-				response.getWriter().println("alert('Invocador nao encontrado');");
-				response.getWriter().println("window.location.replace('cadastrarUsuario.jsp');");
-				response.getWriter().println("</script>");
-				return;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		String puuid = summonerResponse.getAsJsonPrimitive("puuid").getAsString();
-		String encryptedId = summonerResponse.getAsJsonPrimitive("id").getAsString();
-		String summonerLevel = summonerResponse.getAsJsonPrimitive("summonerLevel").getAsString();
-		
-		summoner.setSummonerPuuid(puuid);
-		summoner.setSummonerEncryptedId(encryptedId);
-		summoner.setSummonerName(summonerNameResponse.getAsString());
-		summoner.setSummonerLevel(summonerLevel);
-			
-		dao.insertSummoner(summoner);
-		
-		request.setAttribute("puuid", summoner.getSummonerPuuid());
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("insert-usuario");
-		
-		try {
-			dispatcher.forward(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	protected void atualizarSummonerPartidas(HttpServletRequest request, HttpServletResponse response) {
-		summoner = dao.selectSummonerById(request.getParameter("puuid"));
-		summoner.setPartidas(Arrays.asList(request.getParameter("partidas").split(",")));
-
-		dao.updateSummoner(summoner);
-
-		request.setAttribute("puuid", summoner.getSummonerPuuid());
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("partidas.jsp");
-
-		try {
-			dispatcher.forward(request, response);
-		} catch (ServletException | IOException e) {
-			e.printStackTrace();
-		}
+		return responseContent.toString();
 	}
 
 }

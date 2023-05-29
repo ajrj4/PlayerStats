@@ -24,16 +24,15 @@ import bean.Summoner;
 import model.SummonerDAO;
 
 
-@WebServlet(urlPatterns = {"/select-partidas", "/update-partida"})
+@WebServlet(urlPatterns = {"/select-partidas", "/update-partidas"})
 public class PartidaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	String apiKey = "?api_key=RGAPI-667506a1-aa30-4c39-b582-9866b83be204";
+	String apiKey = "?api_key=RGAPI-57aacb97-2649-4106-ad1d-26c4f4d34270";
        
     public PartidaController() {
         super();
     }
-
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
@@ -48,7 +47,7 @@ public class PartidaController extends HttpServlet {
 			partidasToJson(request, response);
 			break;
 	
-		case "/update-partida":
+		case "/update-partidas":
 			atualizarPartidas(request, response);
 			break;
 			
@@ -65,7 +64,7 @@ public class PartidaController extends HttpServlet {
 		
 		if (summoner.getPartidas() == Collections.<String>emptyList()) {
 			try {
-				response.sendRedirect("update-partida");
+				response.sendRedirect("update-partidas");
 				return;
 			} catch (IOException e) {
 				e.printStackTrace();

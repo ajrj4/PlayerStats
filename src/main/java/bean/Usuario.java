@@ -70,5 +70,11 @@ public class Usuario {
 		this.summonerId = summonerId;
 	}
 
+	@Override
+	public String toString() {
+		return "Usuario [idUsuario=" + idUsuario + ", idNivelUsuario=" + idNivelUsuario + ", nome=" + nome + ", email="
+				+ email + ", senha=" + senha + ", summonerId=" + summonerId + "]";
+	}
+	
 
 }

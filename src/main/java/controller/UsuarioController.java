@@ -75,9 +75,9 @@ public class UsuarioController extends HttpServlet {
 		usuario.setEmail(request.getParameter("email"));
 		usuario.setSenha(request.getParameter("senha"));
 		usuario.setSummonerId((String) request.getAttribute("puuid"));
-
+	
 		dao.insertUsuario(usuario);
-		
+			
 		request.removeAttribute("puuid");
 		
 		try {
@@ -120,15 +120,23 @@ public class UsuarioController extends HttpServlet {
 		usuario.setSummonerId(request.getParameter("summonerId"));
 
 		dao.updateUsuario(usuario);
+		
+		try {
+			response.sendRedirect("logout");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
+	//TODO
 	protected void excluirUsuario(HttpServletRequest request, HttpServletResponse response) {
-		int id = Integer.parseInt(request.getParameter("id"));
-
-		dao.deleteUsuario(id);
-
+		HttpSession session = request.getSession(false);
+		
+		usuario = dao.selectUsuarioByName((String) session.getAttribute("usuario"));
+		
+		dao.deleteUsuario(usuario.getIdUsuario());
 		try {
-			response.sendRedirect("login");
+			response.sendRedirect("delete-summoner");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

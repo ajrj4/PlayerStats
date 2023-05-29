@@ -21,11 +21,11 @@ import bean.Champion;
 import model.ChampionDAO;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
-@WebServlet(urlPatterns = { "/insert-champion", "/select-champions", "/show-mastery" })
+@WebServlet(urlPatterns = { "/insert-champion", "/select-champions","/delete-champion", "/show-mastery" })
 public class ChampionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	String apiKey = "?api_key=RGAPI-667506a1-aa30-4c39-b582-9866b83be204";
+	String apiKey = "?api_key=RGAPI-57aacb97-2649-4106-ad1d-26c4f4d34270";
 
 	private Champion champion = new Champion();
 	private ChampionDAO dao = new ChampionDAO();
@@ -52,6 +52,10 @@ public class ChampionController extends HttpServlet {
 			selecionarChampions(request, response);
 			break;
 			
+		case "/delete-champion":
+			excluirChampion(request, response);
+			break;
+			
 		case "/show-mastery":
 			mostrarMaestria(request, response);
 			break;
@@ -72,7 +76,7 @@ public class ChampionController extends HttpServlet {
 
 			dao.insertChampion(champion);
 		
-			response.sendRedirect("championForm.jsp");
+			response.sendRedirect("cadastrarChampion.jsp");
 			
 		} catch (IOException | ServletException e) {
 			e.printStackTrace();
@@ -90,6 +94,23 @@ public class ChampionController extends HttpServlet {
 		try {
 			dispatcher.forward(request, response);
 		} catch (ServletException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//TODO
+	protected void excluirChampion(HttpServletRequest request, HttpServletResponse response) {
+		int championId = Integer.parseInt(request.getParameter("id"));
+		
+		dao.deleteChampion(championId);
+		
+		try {
+			response.getWriter().println("<script type='text/javascript'>");
+			response.getWriter().println("alert('Campeão excluído com sucesso!');");
+			response.getWriter().println("window.location.replace('listarChampions.jsp');");
+			response.getWriter().println("</script>");
+			return;
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

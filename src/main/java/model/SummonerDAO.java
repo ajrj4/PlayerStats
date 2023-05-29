@@ -29,22 +29,20 @@ public class SummonerDAO {
 		return connection;
 	}
 
-	public void insertSummoner(Summoner summoner) {
+	public void insertSummoner(Summoner summoner) throws SQLException  {
 		Connection connection = getConnection();
 		String sql = "insert into summoners (summonerId, encryptedId, summonerName, summonerLevel) values (?, ?, ?, ?)";
 
-		try {
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.setString(1, summoner.getSummonerPuuid());
-			ps.setString(2, summoner.getSummonerEncryptedId());
-			ps.setString(3, summoner.getSummonerName());
-			ps.setString(4, summoner.getSummonerLevel());
+	
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setString(1, summoner.getSummonerPuuid());
+		ps.setString(2, summoner.getSummonerEncryptedId());
+		ps.setString(3, summoner.getSummonerName());
+		ps.setString(4, summoner.getSummonerLevel());
 
-			ps.executeUpdate();
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		ps.executeUpdate();
+		connection.close();
+		
 	}
 
 	public Summoner selectSummonerById(String id) {
