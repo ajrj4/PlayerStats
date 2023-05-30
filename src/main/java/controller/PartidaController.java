@@ -28,7 +28,8 @@ import model.SummonerDAO;
 public class PartidaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	String apiKey = "?api_key=RGAPI-57aacb97-2649-4106-ad1d-26c4f4d34270";
+	//Esta chave é resetada todos os dias e precisa ser atualizada manualmente
+	String apiKey = "?api_key=RGAPI-0c0ab81d-01fe-4227-b85d-10464d8a4813";
        
     public PartidaController() {
         super();

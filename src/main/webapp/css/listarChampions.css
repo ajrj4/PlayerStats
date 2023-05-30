@@ -13,6 +13,7 @@ nav{
 nav a{
 	color: white;
 	text-decoration: none;
+	margin-right: 10px;
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 700;
 	font-size: 18px;
@@ -43,20 +44,11 @@ nav a{
     color: white;
     font-size: 50px;
 }
-  
-.flexbox a {
-    color: white;
-    text-decoration: underline;
-}
-  
-.flexbox a:hover {
-    color: rgb(200, 200, 200);
-}
 
 .container {
     background-color: white;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
@@ -66,18 +58,29 @@ nav a{
     padding-bottom: 10px;
     width: auto;
     border-radius: 30px;
-    
 }
 
 .champion{
-	padding: 13px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100px;
+	width: 100px;
+	padding: 30px;
 	font-size: 15px;
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 400; 
 }
 
 .champion img {
-	height: 40px;
-	width: 40px;
+	height: 50px;
+	width: 50px;
 	border-radius: 50%;
+}
+
+.champion a{
+	padding: 5px;
+	color: black;
+	text-decoration: underline;
 }

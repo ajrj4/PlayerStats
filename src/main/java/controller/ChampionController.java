@@ -25,7 +25,8 @@ import model.ChampionDAO;
 public class ChampionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	String apiKey = "?api_key=RGAPI-57aacb97-2649-4106-ad1d-26c4f4d34270";
+	//Esta chave é resetada todos os dias e precisa ser atualizada manualmente
+	String apiKey = "?api_key=RGAPI-0c0ab81d-01fe-4227-b85d-10464d8a4813";
 
 	private Champion champion = new Champion();
 	private ChampionDAO dao = new ChampionDAO();
@@ -107,7 +108,7 @@ public class ChampionController extends HttpServlet {
 		try {
 			response.getWriter().println("<script type='text/javascript'>");
 			response.getWriter().println("alert('Campeão excluído com sucesso!');");
-			response.getWriter().println("window.location.replace('listarChampions.jsp');");
+			response.getWriter().println("window.location.replace('index.jsp');");
 			response.getWriter().println("</script>");
 			return;
 		} catch (IOException e) {
@@ -159,7 +160,7 @@ public class ChampionController extends HttpServlet {
 		
 		request.setAttribute("maestrias", responseContent.toString());
 		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("listarMaestria.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("listarMaestrias.jsp");
 		
 		try {
 			dispatcher.forward(request, response);

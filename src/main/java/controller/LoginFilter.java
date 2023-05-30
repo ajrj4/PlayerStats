@@ -40,13 +40,17 @@ public class LoginFilter extends HttpFilter implements Filter {
         boolean isInsertSummonerRequest = httpServletRequest.getRequestURI().equals(insertSummonerURI);
         boolean isInsertUsuarioRequest = httpServletRequest.getRequestURI().equals(insertUsuarioURI);
         boolean isLoginPage = httpServletRequest.getRequestURI().endsWith("login.jsp");
+        boolean isCSSResource = httpServletRequest.getRequestURI().startsWith("/PlayerStats/css/");
+        boolean isJSResource = httpServletRequest.getRequestURI().startsWith("/PlayerStats/js/");
+        
 		
 		if(isLoggedIn && (isLoginRequest || isLoginPage)) {
 			
 			RequestDispatcher dispatcher = httpServletRequest.getRequestDispatcher("main");
 			dispatcher.forward(request, response);
 			
-		} else if(!isLoggedIn && (isLoginRequest || isCadastroRequest || isInsertSummonerRequest || isInsertUsuarioRequest)){
+		} else if(!isLoggedIn && (isLoginRequest || isCadastroRequest || isInsertSummonerRequest || isInsertUsuarioRequest
+				|| isCSSResource || isJSResource)){
 			
 			chain.doFilter(request, response);	
 			

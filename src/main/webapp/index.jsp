@@ -8,7 +8,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Home</title>
+<link rel="stylesheet" type="text/css" href="css/index.css"/>
 </head>
 <body>
 	<%
@@ -18,14 +19,22 @@
 		Summoner summoner = summonerDAO.selectSummonerById(usuario.getSummonerId());
 	%>
 	<header>
-		<a href="select-champions">Atualizar dados</a>
-		<a href="select-champions">Campeões</a>
-		<a href="cadastrarChampion.jsp">Cadastrar Campeões</a>
-		<a href="select-partidas">Partidas</a>
-		<a href="delete-usuario">Excluir conta</a>
-		<a href="logout">Sair</a>
+		<nav class="navHeader">
+			<a href="logout">Sair</a>
+		</nav>
 	</header>
-	<h1><%=summoner.getSummonerName() %></h1>
-	<h2><%=summoner.getSummonerLevel() %></h2>
+	<section class="flexbox">
+		<h1>Página Inicial</h1>
+		<div class="container">
+			<h1><%=summoner.getSummonerName() %></h1>
+			<h2>Nível: <%=summoner.getSummonerLevel() %></h2>
+			<nav class="links">
+				<a href="update-summoner">Atualizar dados</a>
+				<a href="select-champions">Listar Campeões</a>
+				<a href="select-partidas">Partidas</a>
+				<a href="delete-usuario">Excluir conta</a>
+			</nav>
+		</div>
+	</section>
 </body>
 </html>

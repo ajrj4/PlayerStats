@@ -28,7 +28,8 @@ import model.UsuarioDAO;
 public class SummonerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	String apiKey = "?api_key=RGAPI-57aacb97-2649-4106-ad1d-26c4f4d34270";
+	//Esta chave é resetada todos os dias e precisa ser atualizada manualmente
+	String apiKey = "?api_key=RGAPI-0c0ab81d-01fe-4227-b85d-10464d8a4813";
 	
 	Summoner summoner = new Summoner();
 	SummonerDAO dao = new SummonerDAO();
@@ -150,6 +151,9 @@ public class SummonerController extends HttpServlet {
 	}
 	
 	protected void atualizarSummoner(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+		
+		request.setAttribute("summoner", session.getAttribute("summoner"));
 		String respostaDeApi = buscarDadosDeSummoner(request);
 		
 		JsonObject json = new Gson().fromJson(respostaDeApi, JsonObject.class);
@@ -167,7 +171,7 @@ public class SummonerController extends HttpServlet {
 		dao.updateSummoner(summoner);
 		
 		try {
-			response.sendRedirect("update-partida");
+			response.sendRedirect("update-partidas");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -182,7 +186,7 @@ public class SummonerController extends HttpServlet {
 
 		try {
 			URL url = new URL("https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/"
-					+ request.getParameter("summonerName").replaceAll("\\s", "") + apiKey);
+					+ ((String) request.getAttribute("summoner")).replaceAll("\\s", "") + apiKey);
 			
 			connection = (HttpsURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");

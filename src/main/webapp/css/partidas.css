@@ -1,6 +1,7 @@
-body {
-    background-color: rgb(34, 34, 34);
-    margin: 0 auto;
+html{
+	min-height: 100%;
+	background-repeat: no-repeat;
+	background: linear-gradient(black, rgb(34, 34, 34), rgb(150, 150, 150));
 }
 
 nav{
@@ -90,7 +91,7 @@ nav a{
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 10px;
+	padding: 7px;
 }
 
 .player p{
@@ -105,7 +106,7 @@ nav a{
 .horizontalAlign{
 	display: flex;
 	flex-direction: row;
-	justify-content: space-around;
+	justify-content: center;
 	flex-wrap: wrap;
 }
 
@@ -123,7 +124,7 @@ footer{
 footer a{
 	color: black;
 	background-color: white;
-	padding: 20px;
+	padding: 15px;
 	margin-top: 5px;
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 700;

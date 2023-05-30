@@ -82,7 +82,7 @@ public class SummonerDAO {
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, summoner.getSummonerName());
 			ps.setString(2, summoner.getSummonerLevel());
-			ps.setString(3, String.join(" ", summoner.getPartidas()));
+			ps.setString(3, summoner.getPartidas() != null ? String.join(" ", summoner.getPartidas()) : "");
 			ps.setString(4, summoner.getSummonerPuuid());
 			status = ps.executeUpdate();
 			connection.close();

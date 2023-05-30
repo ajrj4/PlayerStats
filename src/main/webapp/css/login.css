@@ -6,8 +6,7 @@ html{
 
 nav{
 	padding: 25px;
-	display: flex;
-	justify-content: space-between;
+	text-align: right;
 }
 
 nav a{
@@ -16,41 +15,25 @@ nav a{
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 700;
 	font-size: 18px;
+	
 }
 
-.links{
-	list-style-type: none;
- 	margin: 0;
-	padding: 0;
+nav a:hover{
+	color: rgb(200, 200, 200);
 }
-
-.links li{
-	display: inline;
-	padding: 5px;
-}
-
 
 .flexbox {
     display: flex;
-    min-height: 95vh;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     text-align: center;
+    
 }
  
 .flexbox h1 {
     color: white;
     font-size: 50px;
-}
-  
-.flexbox a {
-    color: white;
-    text-decoration: underline;
-}
-  
-.flexbox a:hover {
-    color: rgb(200, 200, 200);
 }
 
 .container {
@@ -61,23 +44,41 @@ nav a{
     flex-direction: row;
     flex-wrap: wrap;
     margin-top: 5vh;
-    max-width: 1200px;
+    width: 800px;
     height: auto;
-    padding-bottom: 10px;
-    width: auto;
-    border-radius: 30px;
-    
+    padding: 40px;
+    border-radius: 30px; 
+    font-family: 'Open Sans', sans-serif;
 }
 
-.champion{
-	padding: 13px;
-	font-size: 15px;
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 400; 
+.loginForm{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
-.champion img {
-	height: 40px;
-	width: 40px;
-	border-radius: 50%;
+.loginForm label{
+	padding: 10px;
+	font-weight: 700;
+}
+
+.loginForm input{
+	margin-bottom: 12px;
+	border: 1px solid black;
+	border-radius: 30px;
+	width: 300px;
+	height: 30px;
+	text-align: center;
+}
+
+.loginForm button{
+	margin-top: 20px;
+	width: 100px;
+	padding: 10px;
+	border: 1px solid black;
+	border-radius: 30px;
+}
+
+.loginForm button:hover{
+	cursor: pointer;
 }

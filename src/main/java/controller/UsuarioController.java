@@ -177,6 +177,7 @@ public class UsuarioController extends HttpServlet {
 		HttpSession session = request.getSession(true);
 
 		session.setAttribute("usuario", usuario.getNome());
+		session.setAttribute("nivelUsuario", usuario.getIdNivelUsuario());
 		session.setAttribute("puuid", usuario.getSummonerId());
 		session.setAttribute("summoner", summoner.getSummonerName());
 		session.setAttribute("encryptedId", summoner.getSummonerEncryptedId());
