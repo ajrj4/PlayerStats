@@ -26,7 +26,7 @@ public class ChampionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	//Esta chave é resetada todos os dias e precisa ser atualizada manualmente
-	String apiKey = "?api_key=RGAPI-0c0ab81d-01fe-4227-b85d-10464d8a4813";
+	String apiKey = "?api_key=RGAPI-33aff293-0706-47f0-b418-22a3ef500b8b";
 
 	private Champion champion = new Champion();
 	private ChampionDAO dao = new ChampionDAO();
@@ -68,8 +68,23 @@ public class ChampionController extends HttpServlet {
 
 	protected void inserirChampion(HttpServletRequest request, HttpServletResponse response) {
 
-		champion.setChampionId(Integer.parseInt(request.getParameter("id")));
-		champion.setChampionName(request.getParameter("name"));
+		int champId = Integer.parseInt(request.getParameter("id"));
+		String champNome = request.getParameter("name");
+		
+		if(dao.selectChampionById(champId).getChampionName() != null) {
+			try {
+				response.getWriter().println("<script type='text/javascript'>");
+				response.getWriter().println("alert('Campeão já existe!');");
+				response.getWriter().println("window.location.replace('cadastrarChampion.jsp');");
+				response.getWriter().println("</script>");
+				return;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		champion.setChampionId(champId);
+		champion.setChampionName(champNome);
 
 		try {
 			Part part = request.getPart("icon");

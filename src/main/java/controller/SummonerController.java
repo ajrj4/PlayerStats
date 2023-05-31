@@ -29,7 +29,7 @@ public class SummonerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	//Esta chave é resetada todos os dias e precisa ser atualizada manualmente
-	String apiKey = "?api_key=RGAPI-0c0ab81d-01fe-4227-b85d-10464d8a4813";
+	String apiKey = "?api_key=RGAPI-33aff293-0706-47f0-b418-22a3ef500b8b";
 	
 	Summoner summoner = new Summoner();
 	SummonerDAO dao = new SummonerDAO();
@@ -79,6 +79,8 @@ public class SummonerController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		
+		request.setAttribute("summoner", request.getParameter("summonerName"));
 		
 		String respostaDeApi = buscarDadosDeSummoner(request);		
 		

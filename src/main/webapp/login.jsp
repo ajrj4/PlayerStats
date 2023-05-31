@@ -29,9 +29,8 @@
 				
 				<button id="btnLogin" type="submit">Fazer Login</button>
 			</form>
-		</div>
-		
+		</div>	
 	</section>
-<script type="text/javascript" src="js/validarLogin.js"></script>
+	<script type="text/javascript" src="js/validarLogin.js"></script>
 </body>
 </html>

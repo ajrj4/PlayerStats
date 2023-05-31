@@ -22,6 +22,11 @@
 </head>
 <body>
 	<%
+		if(request.getAttribute("maestrias") == null){
+			response.sendRedirect("show-mastery");
+			return;
+		}
+	
 		ChampionDAO championDao = new ChampionDAO();
 		List<Champion> championList = championDao.selectChampions();
 		Map<Integer, Champion> championMap = new HashMap<>();
