@@ -29,7 +29,7 @@ public class PartidaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	//Esta chave é resetada todos os dias e precisa ser atualizada manualmente
-	String apiKey = "?api_key=RGAPI-33aff293-0706-47f0-b418-22a3ef500b8b";
+	String apiKey = "?api_key=RGAPI-d0580925-58c0-4eb3-91ac-328b205cad55";
        
     public PartidaController() {
         super();
