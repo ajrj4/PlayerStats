@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="css/cadastrarUsuario.css"/>
+<link rel="stylesheet" type="text/css" href="css/cadastrarUsuarios.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script></head>
 <body>
 	<header>
@@ -31,7 +31,9 @@
 				
 				<label for="summonerName">Nome de Invocador: </label>
 				<input id="summonerName" type="text" id="summonerName" name="summonerName"/>
-				<button id="btnCadastro" type="submit">Cadastrar</button>
+				<button id="btnChecaInvocador" type="button">Checar Invocador</button>
+
+				<button id="btnCadastro" type="submit" disabled>Cadastrar</button>
 			</form>
 			</div>
 	</section>

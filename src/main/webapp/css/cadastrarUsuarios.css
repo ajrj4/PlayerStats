@@ -82,3 +82,12 @@ nav a:hover{
 .frmUsuario button:hover{
 	cursor: pointer;
 }
+
+.success {
+	background-color: rgb(153, 255, 153);
+}
+
+.error {
+	background-color: rgb(255, 51, 51);
+}
+
